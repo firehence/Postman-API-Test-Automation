@@ -1,0 +1,275 @@
+{
+	"info": {
+		"_postman_id": "e47670d3-7a99-464d-be0e-9c4cfb2c0a8b",
+		"name": "New Collection",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "39147590",
+		"_collection_link": "https://www.postman.com/aytunyuksek48/workspace/postman-api-test-automation/collection/39147590-e47670d3-7a99-464d-be0e-9c4cfb2c0a8b?action=share&source=collection_link&creator=39147590"
+	},
+	"item": [
+		{
+			"name": "New Request",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response has a list of items\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData).to.be.an(\"array\").that.is.not.empty; \r",
+							"    pm.expect(jsonData.length).to.be.above(0); \r",
+							"});\r",
+							"\r",
+							"pm.test(\"Each item has required fields\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    \r",
+							"    jsonData.forEach(function(item) {\r",
+							"        pm.expect(item).to.have.property(\"id\");\r",
+							"        pm.expect(item).to.have.property(\"name\");\r",
+							"        \r",
+							"        if (item.hasOwnProperty(\"description\")) {\r",
+							"            pm.expect(item.description).to.be.a(\"string\");\r",
+							"        }\r",
+							"        if (item.hasOwnProperty(\"price\")) {\r",
+							"            pm.expect(item.price).to.be.a(\"number\");\r",
+							"        }\r",
+							"    });\r",
+							"});\r",
+							"\r",
+							"pm.test(\"All items have unique IDs\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    var ids = jsonData.map(function(item) { return item.id; });\r",
+							"    var uniqueIds = new Set(ids);\r",
+							"    pm.expect(uniqueIds.size).to.equal(ids.length); \r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Response time is less than 500ms\", function () {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(500); \r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/items",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"items"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "New Request",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Test 1: Yanıtın JSON formatında olduğundan emin ol\r",
+							"pm.test(\"Response is in JSON format\", function () {\r",
+							"    pm.response.to.have.header(\"Content-Type\", \"application/json\"); // Yanıtın JSON formatında olduğunu kontrol et\r",
+							"    pm.expect(pm.response.json()).to.be.an(\"object\"); // Yanıt JSON olmalı\r",
+							"});\r",
+							"\r",
+							"// Test 2: Yanıtın oluşturulan öğeyi içermesi gerekiyor\r",
+							"pm.test(\"Response has the created item\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData).to.have.property(\"id\");\r",
+							"    pm.expect(jsonData).to.have.property(\"name\", \"Example Item\");\r",
+							"});\r",
+							"\r",
+							"// **Yeni Test 3**: Yanıt süresi 500ms'den az olmalı\r",
+							"pm.test(\"Response time is less than 500ms\", function () {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(500); // Yanıt süresi 500ms'yi geçmemeli\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{ \r\n\"id\": 1, \r\n\"name\": \"Sample Item\" \r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/items",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"items"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "New Request",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Test 1: Yanıtın güncellenmiş öğeyi içermesi gerekiyor\r",
+							"pm.test(\"Response has updated item details\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData).to.have.property(\"id\"); // id property'si olmalı\r",
+							"    pm.expect(jsonData).to.have.property(\"name\", \"Updated Item\"); // Güncellenmiş isim olmalı\r",
+							"});\r",
+							"\r",
+							"// Test 2: Yanıtın JSON formatında olup olmadığını kontrol et\r",
+							"pm.test(\"Response is in JSON format\", function () {\r",
+							"    var contentType = pm.response.headers.get(\"Content-Type\");\r",
+							"    pm.expect(contentType).to.include(\"application/json\"); // JSON formatı olmalı\r",
+							"\r",
+							"    // Yanıtın geçerli bir JSON olup olmadığını kontrol et\r",
+							"    try {\r",
+							"        var jsonResponse = pm.response.json();\r",
+							"        pm.expect(jsonResponse).to.be.an(\"object\"); // JSON objesi olmalı\r",
+							"    } catch (e) {\r",
+							"        pm.expect.fail(\"Response is not valid JSON\");\r",
+							"    }\r",
+							"});\r",
+							"\r",
+							"// **Yeni Test 3**: Yanıt süresinin 500ms'den az olması gerektiğini kontrol et\r",
+							"pm.test(\"Response time is less than 500ms\", function () {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(500); // Yanıt süresi 500ms'yi geçmemeli\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{  \r\n\"name\": \"Sample2\" \r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/items/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"items",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "New Request",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Test 1: Yanıtın 204 olması durumunda gövde boş olmalı\r",
+							"pm.test(\"Response body is empty for 204\", function () {\r",
+							"    // 204 durumunda yanıtın gövdesinin boş olmasını kontrol et\r",
+							"    if (pm.response.status === 204) {\r",
+							"        pm.expect(pm.response.text()).to.eql('');  // Yanıt gövdesi boş olmalı\r",
+							"    }\r",
+							"});\r",
+							"\r",
+							"// Test 2: Yanıtın JSON formatında olup olmadığını kontrol et\r",
+							"pm.test(\"Response should be in JSON format if status is 200 or 201\", function () {\r",
+							"    var contentType = pm.response.headers.get(\"Content-Type\");\r",
+							"\r",
+							"    // 200 veya 201 durumu için JSON formatında olup olmadığını kontrol et\r",
+							"    if (pm.response.status === 200 || pm.response.status === 201) {\r",
+							"        pm.expect(contentType).to.include(\"application/json\", `Expected 'Content-Type' to be 'application/json', but got ${contentType}`);\r",
+							"        \r",
+							"        // Ayrıca, yanıtın JSON olup olmadığını da kontrol edebiliriz\r",
+							"        try {\r",
+							"            var jsonResponse = pm.response.json();  // Yanıtın JSON olarak parse edilebilmesi gerekir\r",
+							"            pm.expect(jsonResponse).to.be.an(\"object\");  // JSON objesi olmalı\r",
+							"        } catch (e) {\r",
+							"            pm.expect.fail(\"Response is not valid JSON\");\r",
+							"        }\r",
+							"    }\r",
+							"});\r",
+							"\r",
+							"// Test 3: Yanıt süresi 500ms'den az olmalı\r",
+							"pm.test(\"Response time is less than 500ms\", function () {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(500); // Yanıt süresi 500ms'yi geçmemeli\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/items/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"items",
+						"1"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
